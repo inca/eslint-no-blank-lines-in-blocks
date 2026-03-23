@@ -59,6 +59,26 @@ export default [
 ];
 ```
 
+You can also disable autofix while still reporting violations:
+
+```js
+import noBlankLinesInBlocks from '@inca/eslint-no-blank-lines-in-blocks';
+
+export default [
+    {
+        plugins: {
+            '@inca/no-blank-lines-in-blocks': noBlankLinesInBlocks,
+        },
+        rules: {
+            '@inca/no-blank-lines-in-blocks/no-blank-lines-in-blocks': [
+                'error',
+                { enableFix: false },
+            ],
+        },
+    },
+];
+```
+
 ## Examples
 
 ### Method
