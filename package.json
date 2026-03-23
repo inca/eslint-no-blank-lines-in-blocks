@@ -1,10 +1,23 @@
 {
     "name": "@inca/eslint-no-blank-lines-in-blocks",
     "version": "1.0.2",
-    "description": "ESLint rule to disallow blank lines inside method and function blocks.",
+    "description": "ESLint plugin rule to disallow blank lines inside code blocks.",
     "license": "ISC",
-    "author": "",
+    "author": "Boris Okunskiy",
     "type": "module",
+    "keywords": [
+        "eslint",
+        "eslintplugin",
+        "eslint-rule",
+        "typescript",
+        "code-style"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "engines": {
+        "node": ">=18.18"
+    },
     "main": "out/index.js",
     "types": "out/index.d.ts",
     "exports": {

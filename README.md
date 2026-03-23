@@ -1,10 +1,10 @@
 # @inca/eslint-no-blank-lines-in-blocks
 
-ESLint plugin rule that disallows blank lines inside method and function blocks.
+ESLint plugin rule that disallows blank lines inside code blocks.
 
 ## Why this rule
 
-Blank lines inside small methods and functions are often a signal that logic is doing too much in one place. Among other things, this rule helps coding agents write more focused methods/functions and add meaningful structure instead of whitespace-based grouping.
+Blank lines inside small code blocks are often a signal that logic is doing too much in one place. Among other things, this rule helps coding agents write more focused blocks and add meaningful structure instead of whitespace-based grouping.
 
 ## Install
 
@@ -124,5 +124,47 @@ Valid:
 function process(input: string): string {
     const normalized = input.trim();
     return normalized.toUpperCase();
+}
+```
+
+### If block
+
+Invalid:
+
+```ts
+if (isReady) {
+    initialize();
+
+    run();
+}
+```
+
+Valid:
+
+```ts
+if (isReady) {
+    initialize();
+    run();
+}
+```
+
+### For loop
+
+Invalid:
+
+```ts
+for (const item of items) {
+    const normalized = normalize(item);
+
+    output.push(normalized);
+}
+```
+
+Valid:
+
+```ts
+for (const item of items) {
+    const normalized = normalize(item);
+    output.push(normalized);
 }
 ```
