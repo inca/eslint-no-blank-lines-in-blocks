@@ -39,6 +39,26 @@ export default [
 ];
 ```
 
+Optionally allow a single blank line before a comment block:
+
+```js
+import noBlankLinesInBlocks from '@inca/eslint-no-blank-lines-in-blocks';
+
+export default [
+    {
+        plugins: {
+            '@inca/no-blank-lines-in-blocks': noBlankLinesInBlocks,
+        },
+        rules: {
+            '@inca/no-blank-lines-in-blocks/no-blank-lines-in-blocks': [
+                'error',
+                { allowSingleBlankLineBeforeComment: true },
+            ],
+        },
+    },
+];
+```
+
 ## Examples
 
 ### Method
