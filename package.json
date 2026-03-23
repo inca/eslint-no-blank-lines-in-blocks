@@ -36,8 +36,9 @@
         "clean": "rm -rf out/ *.tsbuildinfo",
         "compile": "tsc -b",
         "dev": "tsc -b -w",
-        "lint": "npm run compile && eslint \"src/**/*.ts\"",
-        "lint:fix": "npm run compile && eslint \"src/**/*.ts\" --fix",
+        "test": "mocha",
+        "lint": "npm run compile && eslint",
+        "lint:fix": "npm run compile && eslint --fix",
         "version": "npm run clean && npm run compile",
         "postversion": "npm publish --access=public && git push origin $(git branch --show-current) --tags"
     },
@@ -49,6 +50,7 @@
         "@typescript-eslint/parser": "^8.44.1",
         "@types/eslint": "^9.6.1",
         "eslint": "^9.36.0",
+        "mocha": "^11.7.2",
         "typescript": "^5.9.2"
     }
 }

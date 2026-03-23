@@ -7,7 +7,7 @@ export default [
         ignores: ['out/**'],
     },
     {
-        files: ['**/*.ts'],
+        files: ['**/*.ts', '**/*.{js,mjs,cjs}'],
         languageOptions: {
             parser: tsParser,
             parserOptions: {
@@ -28,11 +28,11 @@ export default [
             'no-restricted-syntax': [
                 'error',
                 {
-                    selector: "CallExpression[callee.property.name='forEach']",
+                    selector: 'CallExpression[callee.property.name=\'forEach\']',
                     message: 'Prefer for..of over .forEach.',
                 },
                 {
-                    selector: "CallExpression[callee.property.name='reduce']",
+                    selector: 'CallExpression[callee.property.name=\'reduce\']',
                     message: 'Do not use .reduce for imperative loops.',
                 },
             ],
