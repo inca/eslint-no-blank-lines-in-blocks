@@ -1,0 +1,39 @@
+{
+    "name": "@inca/eslint-no-blank-lines-in-blocks",
+    "version": "1.0.0",
+    "description": "ESLint rule to disallow blank lines inside method and function blocks.",
+    "license": "ISC",
+    "author": "",
+    "type": "module",
+    "main": "out/index.js",
+    "types": "out/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./out/index.d.ts",
+            "default": "./out/index.js"
+        }
+    },
+    "files": [
+        "out",
+        "README.md",
+        "AGENTS.md",
+        "docs"
+    ],
+    "scripts": {
+        "clean": "rm -rf out/ *.tsbuildinfo",
+        "compile": "tsc -b",
+        "dev": "tsc -b -w",
+        "postversion": "git push origin $(git branch --show-current) --tags",
+        "version": "npm run clean && npm run compile"
+    },
+    "peerDependencies": {
+        "eslint": "^9.0.0"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^8.44.1",
+        "@typescript-eslint/parser": "^8.44.1",
+        "@types/eslint": "^9.6.1",
+        "eslint": "^9.36.0",
+        "typescript": "^5.9.2"
+    }
+}
