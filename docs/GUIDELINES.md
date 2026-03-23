@@ -1,4 +1,4 @@
-# CODING_GUIDELINES.md
+# GUIDELINES
 
 ## Purpose
 
