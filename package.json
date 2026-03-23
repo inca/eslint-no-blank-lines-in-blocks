@@ -23,8 +23,8 @@
         "clean": "rm -rf out/ *.tsbuildinfo",
         "compile": "tsc -b",
         "dev": "tsc -b -w",
-        "postversion": "git push origin $(git branch --show-current) --tags",
-        "version": "npm run clean && npm run compile"
+        "version": "npm run clean && npm run compile",
+        "postversion": "npm run publish --access=public && git push origin $(git branch --show-current) --tags"
     },
     "peerDependencies": {
         "eslint": "^9.0.0"
