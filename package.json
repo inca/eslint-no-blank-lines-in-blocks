@@ -1,6 +1,6 @@
 {
     "name": "@inca/eslint-no-blank-lines-in-blocks",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "ESLint plugin rule to disallow blank lines inside code blocks.",
     "license": "ISC",
     "author": "Boris Okunskiy",
