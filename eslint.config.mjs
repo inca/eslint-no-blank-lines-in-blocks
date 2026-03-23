@@ -1,4 +1,4 @@
-import tseslint from '@typescript-eslint/eslint-plugin';
+import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import noBlankLinesInBlocks from './out/index.js';
 
@@ -16,12 +16,13 @@ export default [
             },
         },
         plugins: {
-            '@typescript-eslint': tseslint,
+            '@typescript-eslint': typescriptEslint,
             '@inca/no-blank-lines-in-blocks': noBlankLinesInBlocks,
         },
         rules: {
             quotes: ['error', 'single'],
             semi: ['error', 'always'],
+            'max-len': ['error', { code: 100, ignoreUrls: true }],
             'prefer-const': 'error',
             '@inca/no-blank-lines-in-blocks/no-blank-lines-in-blocks': 'error',
             'no-restricted-syntax': [

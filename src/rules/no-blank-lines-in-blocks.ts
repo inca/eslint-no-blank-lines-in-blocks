@@ -1,10 +1,15 @@
 import type { Rule } from 'eslint';
 
+type BlockNode = Rule.Node & {
+    body: Rule.Node[];
+    loc: NonNullable<Rule.Node['loc']>;
+};
+
 export const noBlankLinesInBlocksRule: Rule.RuleModule = {
     meta: {
         type: 'suggestion',
         docs: {
-            description: 'Disallow blank lines in method and function blocks.',
+            description: 'Disallow blank lines inside code blocks.',
         },
         schema: [
             {
@@ -18,17 +23,24 @@ export const noBlankLinesInBlocksRule: Rule.RuleModule = {
             },
         ],
         messages: {
-            noBlankLinesInBlock: 'Blank lines are not allowed in method/function blocks; this often signals mixed responsibilities, so extract logically independent steps.',
+            noBlankLinesInBlock: 'Blank lines are not allowed in blocks; '
+                + 'this often signals mixed responsibilities, '
+                + 'so extract logically independent steps.',
         },
     },
     create(context) {
         const sourceCode = context.sourceCode;
-        const allowSingleBlankLineBeforeComment = context.options[0]?.allowSingleBlankLineBeforeComment === true;
+        const allowSingleBlankLineBeforeComment =
+            context.options[0]?.allowSingleBlankLineBeforeComment === true;
         const isCommentLine = (line: string): boolean => {
             const trimmed = line.trim();
-            return trimmed.startsWith('//') || trimmed.startsWith('/*') || trimmed.startsWith('*') || trimmed.startsWith('*/');
+            return trimmed.startsWith('//')
+                || trimmed.startsWith('/*');
         };
-        const hasDisallowedBlankLineBetween = (startLineInclusive: number, endLineInclusive: number): boolean => {
+        const hasDisallowedBlankLineBetween = (
+            startLineInclusive: number,
+            endLineInclusive: number,
+        ): boolean => {
             if (endLineInclusive < startLineInclusive) {
                 return false;
             }
@@ -65,15 +77,19 @@ export const noBlankLinesInBlocksRule: Rule.RuleModule = {
             }
             return false;
         };
-        const checkBlockBody = (reportNode: Rule.Node, blockNode: Rule.Node & { body: Rule.Node[]; loc: NonNullable<Rule.Node['loc']> }): void => {
+        const checkBlockBody = (blockNode: BlockNode): void => {
             const statements = blockNode.body;
             if (statements.length === 0) {
                 return;
             }
             const firstStatement = statements[0];
-            if (hasDisallowedBlankLineBetween(blockNode.loc.start.line + 1, firstStatement.loc!.start.line - 1)) {
+            const hasLeadingGap = hasDisallowedBlankLineBetween(
+                blockNode.loc.start.line + 1,
+                firstStatement.loc!.start.line - 1,
+            );
+            if (hasLeadingGap) {
                 context.report({
-                    node: reportNode,
+                    node: blockNode,
                     messageId: 'noBlankLinesInBlock',
                 });
                 return;
@@ -81,7 +97,11 @@ export const noBlankLinesInBlocksRule: Rule.RuleModule = {
             for (let i = 1; i < statements.length; i += 1) {
                 const previousStatement = statements[i - 1];
                 const currentStatement = statements[i];
-                if (hasDisallowedBlankLineBetween(previousStatement.loc!.end.line + 1, currentStatement.loc!.start.line - 1)) {
+                const hasInnerGap = hasDisallowedBlankLineBetween(
+                    previousStatement.loc!.end.line + 1,
+                    currentStatement.loc!.start.line - 1,
+                );
+                if (hasInnerGap) {
                     context.report({
                         node: currentStatement,
                         messageId: 'noBlankLinesInBlock',
@@ -90,38 +110,22 @@ export const noBlankLinesInBlocksRule: Rule.RuleModule = {
                 }
             }
             const lastStatement = statements[statements.length - 1];
-            if (hasDisallowedBlankLineBetween(lastStatement.loc!.end.line + 1, blockNode.loc.end.line - 1)) {
+            const hasTrailingGap = hasDisallowedBlankLineBetween(
+                lastStatement.loc!.end.line + 1,
+                blockNode.loc.end.line - 1,
+            );
+            if (hasTrailingGap) {
                 context.report({
-                    node: reportNode,
+                    node: blockNode,
                     messageId: 'noBlankLinesInBlock',
                 });
             }
         };
         return {
-            MethodDefinition(node) {
-                if (node.value?.body?.type === 'BlockStatement') {
-                    checkBlockBody(node, node.value.body as Rule.Node & { body: Rule.Node[]; loc: NonNullable<Rule.Node['loc']> });
-                }
-            },
-            Property(node) {
-                const maybeFunctionValue = node.value as { body?: Rule.Node & { body?: Rule.Node[]; loc?: Rule.Node['loc']; type?: string } };
-                if (node.method === true && maybeFunctionValue.body?.type === 'BlockStatement') {
-                    checkBlockBody(node, maybeFunctionValue.body as Rule.Node & { body: Rule.Node[]; loc: NonNullable<Rule.Node['loc']> });
-                }
-            },
-            FunctionDeclaration(node) {
-                if (node.body?.type === 'BlockStatement') {
-                    checkBlockBody(node, node.body as Rule.Node & { body: Rule.Node[]; loc: NonNullable<Rule.Node['loc']> });
-                }
-            },
-            FunctionExpression(node) {
-                if (node.body?.type === 'BlockStatement') {
-                    checkBlockBody(node, node.body as Rule.Node & { body: Rule.Node[]; loc: NonNullable<Rule.Node['loc']> });
-                }
-            },
-            ArrowFunctionExpression(node) {
-                if (node.body?.type === 'BlockStatement') {
-                    checkBlockBody(node, node.body as Rule.Node & { body: Rule.Node[]; loc: NonNullable<Rule.Node['loc']> });
+            BlockStatement(node) {
+                const blockNode = node as unknown as BlockNode;
+                if (Array.isArray(blockNode.body) && blockNode.loc != null) {
+                    checkBlockBody(blockNode);
                 }
             },
         };
